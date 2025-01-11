@@ -1,7 +1,8 @@
 const openai = require('openai');  // OpenAI 라이브러리
+require('dotenv').config();
 
 // OpenAI API 키 설정
-const openaiAPIKey = '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';
+const openaiAPIKey = process.env.OPENAI_KEY;
 
 const analyzeEmotion = async (diaryText) => {
   try {
