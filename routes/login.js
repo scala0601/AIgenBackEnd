@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { OAuth2Client } = require('google-auth-library');
-const client = new OAuth2Client('518790916105-5vks5d48e409tqq2i616decr2ip9a38o.apps.googleusercontent.com', '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');
+const client = new OAuth2Client('518790916105-5vks5d48e409tqq2i616decr2ip9a38o.apps.googleusercontent.com');
 
 // 구글 인증 처리
 router.get('/google/callback', async (req, res) => {
