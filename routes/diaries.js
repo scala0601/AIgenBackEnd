@@ -1,52 +1,69 @@
 const express = require('express');
 const router = express.Router();
 const Diary = require('../models/Diary');
+const { getYouTubePlaylist } = require('../services/youtubeService2');
+const { analyzeEmotion } = require('../services/openaiService');
+const passport = require('passport');
 
-// 일기 저장 엔드포인트
-router.post('/diary', async (req, res) => {
-  try {
-    const { title, content, date, emotion } = req.body;
-    const newDiary = new Diary({ title, content, date, emotion });
-    const savedDiary = await newDiary.save();
-    res.status(201).json({ message: '일기 저장 성공', diary: savedDiary});
-  } catch (err) {
-    res.status(500).json({ error: '일기를 저장하는 데 실패했습니다.' });
-  }
-});
+// 자동 저장 API
+// POST: http://localhost:5000/api/save
+//passport.authenticate('session', { session: false }),
+router.post(
+  '/save',
+  
+  async (req, res) => {
+    const { title, content, genre } = req.body;
+    const userId = "catyelin0601@gmail.com";
+    //const userId = req.session.user ? req.session.user.email : null; // 세션에서 사용자 이메일 사용
 
-// GET: 모든 일기 조회
-router.get('/diaries', async (req, res) => {
-  try {
-      const diaries = await Diary.find();  // MongoDB에서 모든 일기 조회
-      res.status(200).json({ diaries });
-  } catch (error) {
-      res.status(400).json({ error: error.message });
-  }
-});
+    if (!userId) {
+      return res.status(401).json({ message: '로그인이 필요합니다.' });
+    }
 
-// 날짜를 이용해서 일기 조회 
-router.get('/diary/:date', async (req, res) => {
-  const { date } = req.params;  // URL에서 날짜를 받음 (형식: YYYY-MM-DD)
+    try {
+      // 감정 분석 및 플레이리스트 생성
+      const emotion = await analyzeEmotion(content);
+      const playlist = await getYouTubePlaylist(genre, emotion);
 
-  // 날짜 포맷을 Date 객체로 변환
-  const searchDate = new Date(date);
-
-  try {
-      // 날짜에 해당하는 일기 찾기 (같은 날짜의 일기만)
-      const diaries = await Diary.find({
-          date: {
-              $gte: searchDate.setHours(0, 0, 0, 0),  // 날짜의 00시로 설정 (시작 시간)
-              $lt: searchDate.setHours(23, 59, 59, 999) // 날짜의 23시 59분 59초로 설정 (끝 시간)
-          }
+      const newDiary = new Diary({
+        title,
+        content,
+        date: new Date(),
+        genre,
+        emotion,
+        userId,
+        playlist,
       });
 
-      if (diaries.length === 0) {
-          return res.status(404).json({ message: '해당 날짜의 일기가 없습니다.' });
-      }
-
-      res.status(200).json({ diaries });
-  } catch (error) {
-      res.status(400).json({ error: error.message });
+      await newDiary.save();
+      res.status(200).json({ message: '일기가 저장되었습니다.' });
+    } catch (error) {
+      console.error('Error saving diary:', error);
+      res.status(500).json({ message: '일기 저장 실패', error: error.message });
+    }
   }
-});
+);
+
+// 일기 목록 불러오기 (플레이리스트 포함)
+// GET: http://localhost:5000/api/list
+router.get(
+  '/list',
+  passport.authenticate('session', { session: false }),
+  async (req, res) => {
+    const userId = req.session.user ? req.session.user.email : null;
+
+    if (!userId) {
+      return res.status(401).json({ message: '로그인이 필요합니다.' });
+    }
+
+    try {
+      const diaries = await Diary.find({ userId }).sort({ date: -1 }); // 최신순 정렬
+      res.status(200).json(diaries);
+    } catch (error) {
+      console.error('Error fetching diaries:', error);
+      res.status(500).json({ message: '일기 불러오기 실패', error: error.message });
+    }
+  }
+);
+
 module.exports = router;
