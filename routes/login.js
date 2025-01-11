@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { OAuth2Client } = require('google-auth-library');
-const client = new OAuth2Client('518790916105-5vks5d48e409tqq2i616decr2ip9a38o.apps.googleusercontent.com');
+require('dotenv').config();
+const loginKey=process.env.LOGIN_CLIENT_ID;
+const client = new OAuth2Client(loginKey);
 
 // 구글 인증 처리
 router.get('/google/callback', async (req, res) => {
@@ -14,7 +16,7 @@ router.get('/google/callback', async (req, res) => {
         // 구글 토큰 검증
         const ticket = await client.verifyIdToken({
             idToken: token,
-            audience: '518790916105-5vks5d48e409tqq2i616decr2ip9a38o.apps.googleusercontent.com',  // 자신의 클라이언트 ID로 대체
+            audience: loginKey,  // 자신의 클라이언트 ID로 대체
         });
         
         const payload = ticket.getPayload();  // 사용자 정보 가져오기

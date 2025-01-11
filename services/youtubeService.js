@@ -1,8 +1,9 @@
 const { google } = require('googleapis');
+require('dotenv').config();
 
 // Configure OAuth 2.0 client
 const oauth2Client = new google.auth.OAuth2(
-  process.env.YOUTUBE_CLIENT_ID,
+  process.env.LOGIN_CLIENT_ID,
   process.env.YOUTUBE_CLIENT_SECRET,
   process.env.YOUTUBE_REDIRECT_URI
 );
