@@ -14,6 +14,7 @@ const diarySchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+  playlist: { type: Array, default: [] },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'  // 이 모델이 사용자와 관계를 맺고 있다고 가정

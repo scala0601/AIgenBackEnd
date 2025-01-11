@@ -22,7 +22,7 @@ app.use(passport.session());
 passport.use(new GoogleStrategy({
     clientID: 'YOUR_GOOGLE_CLIENT_ID',
     clientSecret: 'YOUR_GOOGLE_CLIENT_SECRET',
-    callbackURL: 'http://localhost:3000/auth/google/callback'
+    callbackURL: 'http://localhost:5000/login/google/callback'
 },
 async (accessToken, refreshToken, profile, done) => {
     // 사용자의 구글 프로필 정보를 데이터베이스에서 확인 후 저장
@@ -45,12 +45,12 @@ passport.deserializeUser((id, done) => {
 });
 
 // 구글 로그인 라우터
-app.get('/auth/google',
+app.get('/login/google',
     passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
 // 구글 로그인 콜백 라우터
-app.get('/auth/google/callback',
+app.get('/login/google/callback',
     passport.authenticate('google', { failureRedirect: '/' }),
     (req, res) => {
         res.redirect('/');
