@@ -19,7 +19,7 @@ router.use(session({
   saveUninitialized: true,
   cookie: {
     httpOnly: true,
-    secure: false,  // 로컬 개발 시 `false`, 프로덕션에서는 `true`
+    secure: true,  // 로컬 개발 시 `false`, 프로덕션에서는 `true`
   }
 }));
 // 자동 저장 API

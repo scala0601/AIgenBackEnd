@@ -17,7 +17,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   cookie: {
-    secure: false,  // 개발 환경에서는 false, 프로덕션에서는 true (HTTPS)
+    secure: true,  // 개발 환경에서는 false, 프로덕션에서는 true (HTTPS)
     maxAge: 24 * 60 * 60 * 1000  // 세션 유효 시간: 24시간
   }
 }));
