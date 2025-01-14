@@ -7,7 +7,7 @@ const passport = require('passport');
 
 const cors = require('cors');
 router.use(cors({
-  origin: 'http://localhost:5173', // 프론트엔드 주소
+  origin: 'https://aiplaylistgenfront.onrender.com', // 프론트엔드 주소
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true, // 세션 쿠키와 같은 인증 정보를 포함할 수 있게 설정
 }));

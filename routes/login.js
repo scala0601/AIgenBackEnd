@@ -22,7 +22,7 @@ router.use(session({
 }));
 
 router.use(cors({
-    origin: 'http://localhost:5173',  // 프론트엔드의 주소로 변경
+    origin: 'https://aiplaylistgenfront.onrender.coms',  // 프론트엔드의 주소로 변경
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,  // credentials: 'include'로 세션을 포함한 요청을 허용
 
@@ -79,7 +79,7 @@ router.get('/logout', (req, res) => {
         if (err) {
             return res.status(500).send("Could not log out");
         }
-        res.redirect('http://localhost:5173');  // 홈 화면으로 리디렉션
+        res.redirect('https://aiplaylistgenfront.onrender.com');  // 홈 화면으로 리디렉션
     });
 });
 
