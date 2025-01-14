@@ -6,6 +6,7 @@ const diarySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  genre: {type: String, default: null},
   date: {
     type: Date,
     default: Date.now,
@@ -14,12 +15,12 @@ const diarySchema = new mongoose.Schema({
     type: String,
     default: null,
   },
-  playlist: { type: Array, default: [] },
-  genre: {type: String, default: null},
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'  // 이 모델이 사용자와 관계를 맺고 있다고 가정
-  }
+
+  userId: {
+    type: Array,
+    default: []  // 이 모델이 사용자와 관계를 맺고 있다고 가정
+  },
+  playlist: { type: Array, default: [] }
 });
 
 module.exports = mongoose.model('Diary', diarySchema);
