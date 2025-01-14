@@ -27,6 +27,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,  // credentials: 'include'로 세션을 포함한 요청을 허용
 }));
+
 app.use(express.json());
 
 app.use('/api', diaryRoutes);
