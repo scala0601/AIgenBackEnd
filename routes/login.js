@@ -16,13 +16,13 @@ router.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: true,  // 개발 환경에서는 false, 프로덕션에서는 true (HTTPS)
+    secure: false,  // 개발 환경에서는 false, 프로덕션에서는 true (HTTPS)
     maxAge: 24 * 60 * 60 * 1000  // 세션 유효 시간: 24시간
   }
 }));
 
 router.use(cors({
-    origin: 'https://aiplaylistgenfront.onrender.com',  // 프론트엔드의 주소로 변경
+    origin: 'http://localhost:5173',  // 프론트엔드의 주소로 변경
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,  // credentials: 'include'로 세션을 포함한 요청을 허용
 
@@ -79,7 +79,7 @@ router.get('/logout', (req, res) => {
         if (err) {
             return res.status(500).send("Could not log out");
         }
-        res.redirect('https://aiplaylistgenfront.onrender.com');  // 홈 화면으로 리디렉션
+        res.redirect('http://localhost:5173');  // 홈 화면으로 리디렉션
     });
 });
 
