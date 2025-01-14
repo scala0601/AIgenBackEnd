@@ -12,8 +12,21 @@ require('./auth');  // Passport 설정 파일 불러오기
 const authRoutes = require('./routes/login');
 require('dotenv').config();
 
+app.use(session({
+  secret: 'your_secret_key',  // 안전한 비밀 키
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    secure: false,  // 개발 환경에서는 false, 프로덕션에서는 true (HTTPS)
+    maxAge: 24 * 60 * 60 * 1000  // 세션 유효 시간: 24시간
+  }
+}));
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173',  // 프론트엔드의 주소로 변경
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,  // credentials: 'include'로 세션을 포함한 요청을 허용
+}));
 app.use(express.json());
 
 app.use('/api', diaryRoutes);
@@ -22,15 +35,7 @@ app.use('/login', authRoutes);
 // 미들웨어 설정
 app.use(bodyParser.json());
 
-app.use(session({
-  secret: 'your_secret_key',  // 안전한 비밀 키
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: false,  // 개발 환경에서는 false, 프로덕션에서는 true (HTTPS)
-    maxAge: 24 * 60 * 60 * 1000  // 세션 유효 시간: 24시간
-  }
-}));
+
 
 app.use(passport.initialize());
 app.use(passport.session());  // 반드시 express-session 다음에 사용
@@ -48,7 +53,7 @@ passport.deserializeUser((email, done) => {
 });
 
 // MongoDB 연결
-mongoose.connect('mongodb+srv://catyelin0601:catyelin0601@cluster0.tyz7m.mongodb.net/', {
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })

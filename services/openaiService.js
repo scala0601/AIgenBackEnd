@@ -12,7 +12,7 @@ async function analyzeEmotion(content) {
       messages: [
         {
           role: 'system',
-          content: '다음의 일기를 분석해서 감정을 한 단어로 요약하세요: 행복, 우울, 분노, 잔잔, 놀람.',
+          content: '다음의 일기를 분석해서 감정을 한 단어로 요약하세요: 행복, 우울, 분노, 잔잔, 놀람. 다른 부가 설명은 생략하고 한 단어만 말해야 합니다.',
         },
         {
           role: 'user',

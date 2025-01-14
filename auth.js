@@ -9,9 +9,13 @@ const app = express();
 
 // 세션 설정
 app.use(session({
-    secret: 'secret_key',
-    resave: true,
-    saveUninitialized: true
+  secret: 'your_secret_key',  // 안전한 비밀 키
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false,  // 개발 환경에서는 false, 프로덕션에서는 true (HTTPS)
+    maxAge: 24 * 60 * 60 * 1000  // 세션 유효 시간: 24시간
+  }
 }));
 
 // passport 초기화
@@ -50,7 +54,7 @@ app.get('/login/google',
 );
 
 // 구글 로그인 콜백 라우터
-app.get('/login/google/callback',
+app.post('/login/google/callback',
     passport.authenticate('google', { failureRedirect: '/' }),
     (req, res) => {
         res.redirect('/');
