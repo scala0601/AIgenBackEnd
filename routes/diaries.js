@@ -42,6 +42,7 @@ router.post(
     const { date, title, content, genre } = req.body;
     const userId = req.session.user; // 세션에서 사용자 정보
 
+
     if (!userId) {
       return res.status(401).json({ message: '로그인이 필요합니다.' });
     }
@@ -50,6 +51,7 @@ router.post(
       // 감정 분석 및 플레이리스트 생성
       const emotion = await analyzeEmotion(content);
       const playlist = await getYouTubePlaylist(genre, emotion);
+
       const updatedDiary = await Diary.findOneAndUpdate(
         { date: new Date(date), userId: userId }, // 조건: 동일한 날짜와 사용자 ID
         { title, content, genre, emotion, playlist }, // 덮어쓸 데이터
@@ -60,12 +62,15 @@ router.post(
         content,
         genre,
         date,
+
         emotion,
         userId,
         playlist,
       });
 
       //await newDiary.save();
+
+
       res.status(200).json({ message: '일기가 저장되었습니다.' });
     } catch (error) {
       console.error('Error saving diary:', error);
@@ -77,6 +82,7 @@ router.post(
 // 일기 목록 불러오기 (플레이리스트 포함)
 // GET: http://localhost:5000/api/list
 router.get(
+
   '/fetch', ensureAuthenticated,
   //passport.authenticate('session', { session: false }),
   async (req, res) => {
